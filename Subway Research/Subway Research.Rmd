@@ -1,0 +1,47 @@
+---
+title: "Subway Research"
+author: "Sean Park"
+date: '2022 2 13 '
+output: word_document
+---
+
+```{r}
+retail = read.csv("total_data.csv", header = TRUE)
+names(retail) = c("Date","Temp","Rain","Wind","Humd","Snow","G_temp", "A_temp","Date1","Day","Total_retail","Store_retail","Deliv_retail")
+retail = subset(retail,select = -Date1)
+summary(retail)
+```
+
+```{r}
+hist(retail$Total_retail)
+```
+
+```{r}
+retail.lm.full = lm(Total_retail~Temp+Rain+Wind+Humd+Snow+G_temp+A_temp+Day, data=retail)
+summary(retail.lm.full)
+```
+```{r}
+drop1(retail.lm.full, test="F")
+retail.lm.A = update(retail.lm.full,.~.-Snow)
+summary(retail.lm.A)
+```
+```{r}
+drop1(retail.lm.A, test="F")
+retail.lm.A = update(retail.lm.A,.~.-G_temp)
+summary(retail.lm.A)
+```
+```{r}
+drop1(retail.lm.A, test="F")
+retail.lm.A = update(retail.lm.A,.~.-Rain)
+summary(retail.lm.A)
+```
+```{r}
+drop1(retail.lm.A, test="F")
+retail.lm.A = update(retail.lm.A,.~.-Wind)
+summary(retail.lm.A)
+```
+```{r}
+drop1(retail.lm.A, test="F")
+summary(retail.lm.A)
+```
+

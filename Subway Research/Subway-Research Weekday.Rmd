@@ -1,0 +1,57 @@
+---
+title: "Untitled"
+author: "Sean Park"
+date: '2022 2 14 '
+output: word_document
+---
+
+---
+title: "Untitled"
+author: "Sean Park"
+date: '2022 2 14 '
+output: word_document
+---
+
+```{r}
+retail = read.csv("total_data.csv", header = TRUE)
+names(retail) = c("Date","Temp","Rain","Wind","Humd","Snow","G_temp", "A_temp","Date1","Day","Total_retail","Store_retail","Deliv_retail")
+retail = subset(retail,select = -Date1)
+summary(retail)
+```
+
+```{r}
+retail_weekday_mask = retail$Day != "일" & retail$Day != "토"
+retail_weekday = retail[retail_weekday_mask,]
+summary(retail_weekday)
+```
+
+
+```{r}
+hist(retail_weekday$Total_retail)
+```
+
+
+
+```{r}
+retail_weekday.lm.full = lm(Total_retail~Temp+Rain+Wind+Humd+Snow+G_temp+A_temp+Day, data=retail_weekday)
+summary(retail_weekday.lm.full)
+```
+```{r}
+drop1(retail_weekday.lm.full, test="F")
+retail_weekday.lm.A = update(retail_weekday.lm.full,.~.-Snow)
+summary(retail_weekday.lm.A)
+```
+```{r}
+drop1(retail_weekday.lm.A, test="F")
+retail_weekday.lm.A = update(retail_weekday.lm.A,.~.-Rain)
+summary(retail_weekday.lm.A)
+```
+```{r}
+drop1(retail_weekday.lm.A, test="F")
+retail_weekday.lm.A = update(retail_weekday.lm.A,.~.-G_temp)
+summary(retail_weekday.lm.A)
+```
+```{r}
+drop1(retail_weekday.lm.A, test="F")
+summary(retail_weekday.lm.A)
+```
